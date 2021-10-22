@@ -9,6 +9,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public int indents = 0; // number of indents applied, multiple of IND
     public static final int IND = 4; // constant of indents increment
     public boolean ind_stmt = false; // bool check for direct parent of a small stmt
+    public boolean error = false; //starts with no error occured
 
     public void setString(String s) {
         this.s = s;
@@ -28,7 +29,8 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     public void addIndents() {
         for (int i = 0; i < indents; i++) {
-            addToString(" ");   //add white space based on number on indents, that can only be a multiple of IND (4)
+            addToString(" "); // add white space based on number on indents, that can only be a multiple of
+                              // IND (4)
         }
     }
 
@@ -119,13 +121,18 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         }
     }
 
+    @Override
+    public void visitErrorNode(ErrorNode node) {
+        error = true;
+    }
+
     // Main
     public static void main(String[] args) throws IOException {
         // objects declaration
         String input_path = args[0]; // from commands line, otherwise "IO\\input.py";
         String output_path = "IO\\output.py";
         String code = "";
-        FileWriter myWriter = new FileWriter(output_path); //write on the output_path
+        FileWriter myWriter = new FileWriter(output_path); // write on the output_path
         PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
         CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
         PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
@@ -135,10 +142,16 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
         // actions
         walker.walk(listener, tree); // walker walks the ParseTree using the final listener
-        code = listener.getString(); //we recover the string code completed
-        myWriter.write(code); //we write on file
-        System.out.println("code wrote successfully");
-        myWriter.close(); //close the file
+        code = listener.getString(); // we recover the string code completed
+        myWriter.write(code); // we write on file
+        if(listener.error){
+            System.out.println("Parsing error occured, please check your input code");
+        }
+        else{
+            System.out.println("code wrote successfully");
+        }
+        myWriter.close(); // close the file
+        
 
     }
 }
