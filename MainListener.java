@@ -9,7 +9,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public int indents = 0; // number of indents applied, multiple of IND
     public static final int IND = 4; // constant of indents increment
     public boolean ind_stmt = false; // bool check for direct parent of a small stmt
-    public boolean error = false; //starts with no error occured
+    public boolean error = false; // starts with no error occured
 
     public void setString(String s) {
         this.s = s;
@@ -143,15 +143,13 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         // actions
         walker.walk(listener, tree); // walker walks the ParseTree using the final listener
         code = listener.getString(); // we recover the string code completed
-        myWriter.write(code); // we write on file
-        if(listener.error){
+        if (listener.error) {
             System.out.println("Parsing error occured, please check your input code");
-        }
-        else{
+        } else {
+            myWriter.write(code);// we write on file
             System.out.println("code wrote successfully");
         }
         myWriter.close(); // close the file
-        
 
     }
 }
