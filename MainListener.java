@@ -5,31 +5,27 @@ import org.antlr.v4.runtime.tree.*;
 
 public class MainListener extends PythonParserBaseListener { // Extends GrammarNameBaseListener
 
-    private String s = ""; // code will be here
+    private String target = ""; // code will be here
     public int indents = 0; // number of indents applied, multiple of IND
     public static final int IND = 4; // constant of indents increment
     public boolean ind_stmt = false; // bool check for direct parent of a small stmt
     public boolean error = false; // starts with no error occured
 
-    public void setString(String s) {
-        this.s = s;
-    }
-
-    public void addToString(String s) {
-        this.s += s;
+    public void addToTarget(String target) {
+        this.target += target;
     }
 
     public void removeLastChar() {
-        this.s = s.substring(0, s.length() - 1);
+        this.target = target.substring(0, target.length() - 1);
     }
 
-    public String getString() {
-        return this.s;
+    public String getTarget() {
+        return this.target;
     }
 
     public void addIndents() {
         for (int i = 0; i < indents; i++) {
-            addToString(" "); // add white space based on number on indents, that can only be a multiple of
+            addToTarget(" "); // add white space based on number on indents, that can only be a multiple of
                               // IND (4)
         }
     }
@@ -46,13 +42,13 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void exitStmt(PythonParser.StmtContext ctx) {
-        addToString("\n"); // newline on every statement
+        addToTarget("\n"); // newline on every statement
         ind_stmt = false;
     }
 
     @Override
     public void enterSuite(PythonParser.SuiteContext ctx) {
-        addToString("\n"); // newline on on every clause that indent
+        addToTarget("\n"); // newline on on every clause that indent
         indents += IND;
     }
 
@@ -73,7 +69,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void enterElif_clause(PythonParser.Elif_clauseContext ctx) {
-        addToString("\n");
+        addToTarget("\n");
         if (indents > 0) {
             addIndents();
         }
@@ -81,7 +77,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void enterElse_clause(PythonParser.Else_clauseContext ctx) {
-        addToString("\n");
+        addToTarget("\n");
         if (indents > 0) {
             addIndents();
         }
@@ -89,7 +85,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void enterExcept_clause(PythonParser.Except_clauseContext ctx) {
-        addToString("\n");
+        addToTarget("\n");
         if (indents > 0) {
             addIndents();
         }
@@ -97,7 +93,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void enterFinally_clause(PythonParser.Finally_clauseContext ctx) {
-        addToString("\n");
+        addToTarget("\n");
         if (indents > 0) {
             addIndents();
         }
@@ -105,7 +101,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void exitDecorator(PythonParser.DecoratorContext ctx) {
-        addToString("\n");
+        addToTarget("\n");
         if (indents > 0) {
             addIndents();
         }
@@ -114,7 +110,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void visitTerminal(TerminalNode node) {
         if (node.getText() != "<EOF>") { // do not print <EOF>
-            addToString(node.getText() + " "); // every terminal node is whitespaced
+            addToTarget(node.getText() + " "); // every terminal node is whitespaced
             if (node.getText() == "") { // redundant
                 removeLastChar();
             }
@@ -142,7 +138,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
         // actions
         walker.walk(listener, tree); // walker walks the ParseTree using the final listener
-        code = listener.getString(); // we recover the string code completed
+        code = listener.getTarget(); // we recover the string code completed
         if (listener.error) {
             System.out.println("Parsing error occured, please check your input code");
         } else {
