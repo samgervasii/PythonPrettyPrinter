@@ -19,31 +19,31 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         return this.target;
     }
 
-    public void moreIndents(){
+    public void moreIndents() {
         this.indents += IND;
     }
 
-    public void lessIndents(){
+    public void lessIndents() {
         this.indents -= IND;
     }
 
-    public int getIndents(){
+    public int getIndents() {
         return this.indents;
     }
-    
-    public void setStmt_Parent(boolean stmt_parent){
+
+    public void setStmt_Parent(boolean stmt_parent) {
         this.stmt_parent = stmt_parent;
     }
 
-    public boolean getStmt_Parent(){
+    public boolean getStmt_Parent() {
         return this.stmt_parent;
     }
 
-    public void setError(boolean error){
+    public void setError(boolean error) {
         this.error = error;
     }
 
-    public boolean getError(){
+    public boolean getError() {
         return this.error;
     }
 
@@ -82,7 +82,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void exitSuite(PythonParser.SuiteContext ctx) {
-        lessIndents(); 
+        lessIndents();
         removeLastChar(); // we got new line from statement so we remove the last char for having a better
                           // formatted code
     }
@@ -90,7 +90,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void enterSimple_stmt(PythonParser.Simple_stmtContext ctx) {
         if (!getStmt_Parent()) { // simple_stmt can have suite as a direct parent, so we have to indent without
-                         // walk on stmt
+            // walk on stmt
             addIndents();
         }
     }
@@ -99,7 +99,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public void enterElif_clause(PythonParser.Elif_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            addIndents();
+            addIndents(); // to align with other indents if they exist. This is true for every clause
         }
     }
 
@@ -107,7 +107,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public void enterElse_clause(PythonParser.Else_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            addIndents();
+            addIndents(); // to align with other indents if they exist. This is true for every clause
         }
     }
 
@@ -115,7 +115,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public void enterExcept_clause(PythonParser.Except_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            addIndents();
+            addIndents(); // to align with other indents if they exist. This is true for every clause
         }
     }
 
@@ -123,7 +123,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public void enterFinally_clause(PythonParser.Finally_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            addIndents();
+            addIndents(); // to align with other indents if they exist. This is true for every clause
         }
     }
 
@@ -131,7 +131,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     public void exitDecorator(PythonParser.DecoratorContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            addIndents();
+            addIndents(); // to align with other indents if they exist. This is true for every clause
         }
     }
 
