@@ -15,12 +15,12 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         this.target += target;
     }
 
-    public void removeLastChar() {
-        this.target = target.substring(0, target.length() - 1);
-    }
-
     public String getTarget() {
         return this.target;
+    }
+
+    public void removeLastChar() {
+        this.target = target.substring(0, target.length() - 1);
     }
 
     public void addIndents() {
