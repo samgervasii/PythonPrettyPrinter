@@ -6,10 +6,10 @@ import org.antlr.v4.runtime.tree.*;
 public class MainListener extends PythonParserBaseListener { // Extends GrammarNameBaseListener
 
     private String target = ""; // code will be here
-    public int indents = 0; // number of indents applied, multiple of IND
-    public static final int IND = 4; // constant of indents increment
-    public boolean ind_stmt = false; // bool check for direct parent of a small stmt
-    public boolean error = false; // starts with no error occured
+    private static final int IND = 4; // constant of indents increment
+    private int indents = 0; // number of indents applied, multiple of IND
+    private boolean stmt_parent = false; // bool check for direct parent of a small stmt
+    private boolean error = false; // starts with no error occured
 
     public void addToTarget(String target) {
         this.target += target;
@@ -19,12 +19,40 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         return this.target;
     }
 
+    public void moreIndents(){
+        this.indents += IND;
+    }
+
+    public void lessIndents(){
+        this.indents -= IND;
+    }
+
+    public int getIndents(){
+        return this.indents;
+    }
+    
+    public void setStmt_Parent(boolean stmt_parent){
+        this.stmt_parent = stmt_parent;
+    }
+
+    public boolean getStmt_Parent(){
+        return this.stmt_parent;
+    }
+
+    public void setError(boolean error){
+        this.error = error;
+    }
+
+    public boolean getError(){
+        return this.error;
+    }
+
     public void removeLastChar() {
         this.target = target.substring(0, target.length() - 1);
     }
 
     public void addIndents() {
-        for (int i = 0; i < indents; i++) {
+        for (int i = 0; i < getIndents(); i++) {
             addToTarget(" "); // add white space based on number on indents, that can only be a multiple of
                               // IND (4)
         }
@@ -34,34 +62,34 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void enterStmt(PythonParser.StmtContext ctx) {
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents(); // the parent is a suite
-            ind_stmt = true; // walk in suite and then stmt
+            setStmt_Parent(true); // walk in suite and then stmt
         }
     }
 
     @Override
     public void exitStmt(PythonParser.StmtContext ctx) {
         addToTarget("\n"); // newline on every statement
-        ind_stmt = false;
+        setStmt_Parent(false);
     }
 
     @Override
     public void enterSuite(PythonParser.SuiteContext ctx) {
         addToTarget("\n"); // newline on on every clause that indent
-        indents += IND;
+        moreIndents();
     }
 
     @Override
     public void exitSuite(PythonParser.SuiteContext ctx) {
-        indents -= IND; // reset variable that counts spaces
+        lessIndents(); 
         removeLastChar(); // we got new line from statement so we remove the last char for having a better
                           // formatted code
     }
 
     @Override
     public void enterSimple_stmt(PythonParser.Simple_stmtContext ctx) {
-        if (!ind_stmt) { // simple_stmt can have suite as a direct parent, so we have to indent without
+        if (!getStmt_Parent()) { // simple_stmt can have suite as a direct parent, so we have to indent without
                          // walk on stmt
             addIndents();
         }
@@ -70,7 +98,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void enterElif_clause(PythonParser.Elif_clauseContext ctx) {
         addToTarget("\n");
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents();
         }
     }
@@ -78,7 +106,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void enterElse_clause(PythonParser.Else_clauseContext ctx) {
         addToTarget("\n");
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents();
         }
     }
@@ -86,7 +114,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void enterExcept_clause(PythonParser.Except_clauseContext ctx) {
         addToTarget("\n");
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents();
         }
     }
@@ -94,7 +122,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void enterFinally_clause(PythonParser.Finally_clauseContext ctx) {
         addToTarget("\n");
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents();
         }
     }
@@ -102,7 +130,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
     @Override
     public void exitDecorator(PythonParser.DecoratorContext ctx) {
         addToTarget("\n");
-        if (indents > 0) {
+        if (getIndents() > 0) {
             addIndents();
         }
     }
@@ -119,7 +147,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
 
     @Override
     public void visitErrorNode(ErrorNode node) {
-        error = true;
+        setError(true);
     }
 
     // Main
@@ -139,7 +167,7 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         // actions
         walker.walk(listener, tree); // walker walks the ParseTree using the final listener
         code = listener.getTarget(); // we recover the string code completed
-        if (listener.error) {
+        if (listener.getError()) {
             System.out.println("Parsing error occured, please check your input code");
         } else {
             myWriter.write(code);// we write on file
