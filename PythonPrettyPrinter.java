@@ -3,12 +3,12 @@ import antlr.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class MainListener extends PythonParserBaseListener { // Extends GrammarNameBaseListener
+public class PythonPrettyPrinter extends PythonParserBaseListener { // Extends GrammarNameBaseListener
 
     private String target = ""; // code will be here
     private static final int IND = 4; // constant of indents increment
     private int indents = 0; // number of indents applied, multiple of IND
-    private boolean stmt_parent = false; // bool check for direct parent of a small stmt
+    private boolean stmt_parent = false; // keeping trace of stmt being the parent
     private boolean error = false; // starts with no error occured
 
     public void addToTarget(String target) {
@@ -162,11 +162,11 @@ public class MainListener extends PythonParserBaseListener { // Extends GrammarN
         PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
         ParseTree tree = parser.root(); // parser.StarterRule() for ParseTree
         ParseTreeWalker walker = new ParseTreeWalker(); // walker
-        MainListener listener = new MainListener(); // main listener
+        PythonPrettyPrinter listener = new PythonPrettyPrinter(); // main listener
 
         // actions
         walker.walk(listener, tree); // walker walks the ParseTree using the final listener
-        code = listener.getTarget(); // we recover the string code completed
+        code = listener.getTarget(); // we recover the string target completed
         if (listener.getError()) {
             System.out.println("Parsing error occured, please check your input code");
         } else {
