@@ -11,43 +11,43 @@ public class PythonPrettyPrinter extends PythonParserBaseListener { // Extends G
     private boolean _stmt_parent = false; // keeping trace of stmt being the parent
     private boolean _error = false; // starts with no error occured
 
-    private void addToTarget(String target) {
+    protected void addToTarget(String target) {
         this._target += target;
     }
 
-    private void addIndents() {
+    protected void addIndents() {
         this._indents += _IND;
     }
 
-    private void cutIndents() {
+    protected void cutIndents() {
         this._indents -= _IND;
     }
 
-    private int getIndents() {
+    protected int getIndents() {
         return this._indents;
     }
 
-    private void setStmt_Parent(boolean stmt_parent) {
+    protected void setStmtParent(boolean stmt_parent) {
         this._stmt_parent = stmt_parent;
     }
 
-    private boolean getStmt_Parent() {
+    protected boolean getStmtParent() {
         return this._stmt_parent;
     }
 
-    private void setError(boolean error) {
+    protected void setError(boolean error) {
         this._error = error;
     }
 
-    private boolean getError() {
+    protected boolean getError() {
         return this._error;
     }
 
-    private void removeLastChar() {
+    protected void removeLastChar() {
         this._target = _target.substring(0, _target.length() - 1);
     }
 
-    private void applyIndents() {
+    protected void applyIndents() {
         for (int i = 0; i < getIndents(); i++) {
             addToTarget(" "); // add white space based on number on indents, that can only be a multiple of
                               // IND (4)
@@ -64,14 +64,14 @@ public class PythonPrettyPrinter extends PythonParserBaseListener { // Extends G
     public void enterStmt(PythonParser.StmtContext ctx) {
         if (getIndents() > 0) {
             applyIndents(); // the parent is a suite
-            setStmt_Parent(true); // walk in suite and then stmt
+            setStmtParent(true); // walk in suite and then stmt
         }
     }
 
     @Override
     public void exitStmt(PythonParser.StmtContext ctx) {
         addToTarget("\n"); // newline on every statement
-        setStmt_Parent(false);
+        setStmtParent(false);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class PythonPrettyPrinter extends PythonParserBaseListener { // Extends G
 
     @Override
     public void enterSimple_stmt(PythonParser.Simple_stmtContext ctx) {
-        if (!getStmt_Parent()) { // simple_stmt can have suite as a direct parent, so we have to indent without
+        if (!getStmtParent()) { // simple_stmt can have suite as a direct parent, so we have to indent without
             // walk on stmt
             applyIndents();
         }
