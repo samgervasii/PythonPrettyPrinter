@@ -107,13 +107,15 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
   @Override
   public String visitErrorNode(ErrorNode node){
+    System.out.println(node.getText()+" : error node text");
+    System.exit(0);
     return node.getText();
   }
 
   public static void main(String[] args) throws IOException {
     // objects declaration
     String input_path = args[0]; // from commands line, otherwise "IO\\input.py";
-    String output_path = args[1];
+    String output_path = args[1]; //from commands line, otherwise "OP\\output.py"
 
     FileWriter targetWriter = new FileWriter(output_path); //file writer
     PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
@@ -124,12 +126,8 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
     // actions
     String c = visitor.visit(tree); // we recover the string target completed
-    if(visitor.visitErrorNode(node) != null){
-      targetWriter.write(c);
-    } else{
-      System.out.println("error TODO");
-    }
+    targetWriter.write(c);
+    System.out.println("code written on file succesfully");
     targetWriter.close();
-
   }
 }
