@@ -63,25 +63,13 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterS_stmt(PythonParser.S_stmtContext ctx) { }
+	@Override public void enterStmt(PythonParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitS_stmt(PythonParser.S_stmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterC_stmt(PythonParser.C_stmtContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitC_stmt(PythonParser.C_stmtContext ctx) { }
+	@Override public void exitStmt(PythonParser.StmtContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -159,13 +147,25 @@ public class PythonParserBaseListener implements PythonParserListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterSuite(PythonParser.SuiteContext ctx) { }
+	@Override public void enterSuite_in_line(PythonParser.Suite_in_lineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitSuite(PythonParser.SuiteContext ctx) { }
+	@Override public void exitSuite_in_line(PythonParser.Suite_in_lineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSuite_new_line(PythonParser.Suite_new_lineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSuite_new_line(PythonParser.Suite_new_lineContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

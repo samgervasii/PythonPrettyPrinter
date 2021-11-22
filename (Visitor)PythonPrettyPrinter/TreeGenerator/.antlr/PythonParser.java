@@ -1,4 +1,4 @@
-// Generated from c:\Users\Samuele Gervasi\My Drive\LIFE\Information\u005Cuniversity\Triennale Informatica\Terzo Anno\Stage e Tesi\Reversible Computing\(Visitor)PythonPrettyPrinter\TreeGenerator\PythonParser.g4 by ANTLR 4.8
+// Generated from c:\Users\Samuele Gervasi\My Drive\LIFE\Information\u005Cuniversity\Triennale Informatica\Terzo Anno\Stage e Tesi\Reversible Computing\PythonPrettyPrinter\(Visitor)PythonPrettyPrinter\TreeGenerator\PythonParser.g4 by ANTLR 4.8
 import org.antlr.v4.runtime.atn.*;
 import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.*;
@@ -389,27 +389,16 @@ public class PythonParser extends PythonParserBase {
 	}
 
 	public static class StmtContext extends ParserRuleContext {
+		public Simple_stmtContext simple_stmt() {
+			return getRuleContext(Simple_stmtContext.class,0);
+		}
+		public Compound_stmtContext compound_stmt() {
+			return getRuleContext(Compound_stmtContext.class,0);
+		}
 		public StmtContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_stmt; }
-	 
-		public StmtContext() { }
-		public void copyFrom(StmtContext ctx) {
-			super.copyFrom(ctx);
-		}
-	}
-	public static class C_stmtContext extends StmtContext {
-		public Compound_stmtContext compound_stmt() {
-			return getRuleContext(Compound_stmtContext.class,0);
-		}
-		public C_stmtContext(StmtContext ctx) { copyFrom(ctx); }
-	}
-	public static class S_stmtContext extends StmtContext {
-		public Simple_stmtContext simple_stmt() {
-			return getRuleContext(Simple_stmtContext.class,0);
-		}
-		public S_stmtContext(StmtContext ctx) { copyFrom(ctx); }
 	}
 
 	public final StmtContext stmt() throws RecognitionException {
@@ -420,7 +409,6 @@ public class PythonParser extends PythonParserBase {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
-				_localctx = new S_stmtContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(145);
@@ -428,7 +416,6 @@ public class PythonParser extends PythonParserBase {
 				}
 				break;
 			case 2:
-				_localctx = new C_stmtContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(146);
@@ -840,9 +827,23 @@ public class PythonParser extends PythonParserBase {
 	}
 
 	public static class SuiteContext extends ParserRuleContext {
+		public SuiteContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_suite; }
+	 
+		public SuiteContext() { }
+		public void copyFrom(SuiteContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class Suite_in_lineContext extends SuiteContext {
 		public Simple_stmtContext simple_stmt() {
 			return getRuleContext(Simple_stmtContext.class,0);
 		}
+		public Suite_in_lineContext(SuiteContext ctx) { copyFrom(ctx); }
+	}
+	public static class Suite_new_lineContext extends SuiteContext {
 		public TerminalNode LINE_BREAK() { return getToken(PythonParser.LINE_BREAK, 0); }
 		public TerminalNode INDENT() { return getToken(PythonParser.INDENT, 0); }
 		public TerminalNode DEDENT() { return getToken(PythonParser.DEDENT, 0); }
@@ -852,10 +853,7 @@ public class PythonParser extends PythonParserBase {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public SuiteContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_suite; }
+		public Suite_new_lineContext(SuiteContext ctx) { copyFrom(ctx); }
 	}
 
 	public final SuiteContext suite() throws RecognitionException {
@@ -867,6 +865,7 @@ public class PythonParser extends PythonParserBase {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
 			case 1:
+				_localctx = new Suite_in_lineContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(225);
@@ -874,6 +873,7 @@ public class PythonParser extends PythonParserBase {
 				}
 				break;
 			case 2:
+				_localctx = new Suite_new_lineContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(226);

@@ -883,9 +883,28 @@ public class PythonParser extends PythonParserBase {
 	}
 
 	public static class SuiteContext extends ParserRuleContext {
+		public SuiteContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_suite; }
+	 
+		public SuiteContext() { }
+		public void copyFrom(SuiteContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class Suite_in_lineContext extends SuiteContext {
 		public Simple_stmtContext simple_stmt() {
 			return getRuleContext(Simple_stmtContext.class,0);
 		}
+		public Suite_in_lineContext(SuiteContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof PythonParserVisitor ) return ((PythonParserVisitor<? extends T>)visitor).visitSuite_in_line(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class Suite_new_lineContext extends SuiteContext {
 		public TerminalNode LINE_BREAK() { return getToken(PythonParser.LINE_BREAK, 0); }
 		public TerminalNode INDENT() { return getToken(PythonParser.INDENT, 0); }
 		public TerminalNode DEDENT() { return getToken(PythonParser.DEDENT, 0); }
@@ -895,13 +914,10 @@ public class PythonParser extends PythonParserBase {
 		public StmtContext stmt(int i) {
 			return getRuleContext(StmtContext.class,i);
 		}
-		public SuiteContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_suite; }
+		public Suite_new_lineContext(SuiteContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof PythonParserVisitor ) return ((PythonParserVisitor<? extends T>)visitor).visitSuite(this);
+			if ( visitor instanceof PythonParserVisitor ) return ((PythonParserVisitor<? extends T>)visitor).visitSuite_new_line(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -915,6 +931,7 @@ public class PythonParser extends PythonParserBase {
 			_errHandler.sync(this);
 			switch ( getInterpreter().adaptivePredict(_input,21,_ctx) ) {
 			case 1:
+				_localctx = new Suite_in_lineContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(225);
@@ -922,6 +939,7 @@ public class PythonParser extends PythonParserBase {
 				}
 				break;
 			case 2:
+				_localctx = new Suite_new_lineContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(226);

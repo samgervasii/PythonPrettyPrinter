@@ -5,10 +5,10 @@ import org.antlr.v4.runtime.tree.*;
 import java.util.*;
 
 public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Extends GrammarNameBaseVisitor
-  protected final int _IND = 4;
-  protected int _indents = 0;
+  protected final int _IND = 4; // costant that tells us how many spaces
+  protected int _indents = 0; // number of indents applied, multiple of IND
 
-  protected String applyIndents() {
+  protected String applyIndents() { // return a string of n spaces where n is _indents
     String tabs = "";
     for (int i = 0; i < _indents; i++) {
       tabs += " ";
@@ -18,27 +18,29 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
   // override visitor methods
 
- 
   @Override
-  public String visitStmt(PythonParser.StmtContext ctx) {
+  public String visitStmt(PythonParser.StmtContext ctx) { // if indents are setted, apply. In every cases add a new line
     if (_indents > 0) {
       return applyIndents() + visitChildren(ctx) + "\n";
     }
     return visitChildren(ctx) + "\n";
   }
 
-
   @Override
-  public String visitSuite(PythonParser.SuiteContext ctx) {
+  public String visitSuite_new_line(PythonParser.Suite_new_lineContext ctx) { // suite in new line has to introduce an
+                                                                              // increment of indents
     _indents += _IND;
     String suite = "\n" + visitChildren(ctx);
-    suite = suite.substring(0, suite.length() - 1); //delete redundant NEW LINE
+    suite = suite.substring(0, suite.length() - 1); // delete redundant NEW LINE
     _indents -= _IND;
     return suite;
   }
 
   @Override
-  public String visitElif_clause(PythonParser.Elif_clauseContext ctx) {
+  public String visitElif_clause(PythonParser.Elif_clauseContext ctx) { // same as Stmt but the new line is added before
+                                                                        // the visitChildren (can be indented but not by
+                                                                        // the last indenter), that's valid for all the
+                                                                        // clauses
     if (_indents > 0) {
       return "\n" + applyIndents() + visitChildren(ctx);
     }
@@ -70,16 +72,17 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
   }
 
   @Override
-  public String visitDecorator(PythonParser.DecoratorContext ctx) {
+  public String visitDecorator(PythonParser.DecoratorContext ctx) { // just like Stmt
     if (_indents > 0) {
       return applyIndents() + visitChildren(ctx) + "\n";
     }
     return visitChildren(ctx) + "\n";
   }
 
-
   @Override
-  public String visitChildren(RuleNode node) {
+  public String visitChildren(RuleNode node) { // the original visitChildren had an aggregate method with result and
+                                               // childResult, the effect was the return of the only last child.
+                                               // Modified with a += operator
     String result = defaultResult();
     if (result == null)
       result = "";
@@ -97,8 +100,14 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
   @Override
   public String visitTerminal(TerminalNode node) {
-     if(node.getText().equalsIgnoreCase("<EOF>") || node.getText().equalsIgnoreCase("")) return "";
-     return node.getText()+" ";
+    if (node.getText().equalsIgnoreCase("<EOF>") || node.getText().equalsIgnoreCase(""))
+      return "";
+    return node.getText() + " ";
+  }
+
+  @Override
+  public String visitErrorNode(ErrorNode node){
+    return node.getText();
   }
 
   public static void main(String[] args) throws IOException {
@@ -106,7 +115,7 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
     String input_path = args[0]; // from commands line, otherwise "IO\\input.py";
     String output_path = args[1];
 
-    FileWriter targetWriter = new FileWriter(output_path);
+    FileWriter targetWriter = new FileWriter(output_path); //file writer
     PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
     CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
     PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
@@ -115,9 +124,11 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
     // actions
     String c = visitor.visit(tree); // we recover the string target completed
-    System.out.println("code wrote successfully");
-    System.out.println(c);
-    targetWriter.write(c);
+    if(visitor.visitErrorNode(node) != null){
+      targetWriter.write(c);
+    } else{
+      System.out.println("error TODO");
+    }
     targetWriter.close();
 
   }

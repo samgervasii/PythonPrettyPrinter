@@ -47,29 +47,15 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitEval_input(PythonParser.Eval_inputContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code s_stmt}
-	 * labeled alternative in {@link PythonParser#stmt}.
+	 * Enter a parse tree produced by {@link PythonParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void enterS_stmt(PythonParser.S_stmtContext ctx);
+	void enterStmt(PythonParser.StmtContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code s_stmt}
-	 * labeled alternative in {@link PythonParser#stmt}.
+	 * Exit a parse tree produced by {@link PythonParser#stmt}.
 	 * @param ctx the parse tree
 	 */
-	void exitS_stmt(PythonParser.S_stmtContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code c_stmt}
-	 * labeled alternative in {@link PythonParser#stmt}.
-	 * @param ctx the parse tree
-	 */
-	void enterC_stmt(PythonParser.C_stmtContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code c_stmt}
-	 * labeled alternative in {@link PythonParser#stmt}.
-	 * @param ctx the parse tree
-	 */
-	void exitC_stmt(PythonParser.C_stmtContext ctx);
+	void exitStmt(PythonParser.StmtContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code if_stmt}
 	 * labeled alternative in {@link PythonParser#compound_stmt}.
@@ -143,15 +129,29 @@ public interface PythonParserListener extends ParseTreeListener {
 	 */
 	void exitClass_or_func_def_stmt(PythonParser.Class_or_func_def_stmtContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link PythonParser#suite}.
+	 * Enter a parse tree produced by the {@code suite_in_line}
+	 * labeled alternative in {@link PythonParser#suite}.
 	 * @param ctx the parse tree
 	 */
-	void enterSuite(PythonParser.SuiteContext ctx);
+	void enterSuite_in_line(PythonParser.Suite_in_lineContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link PythonParser#suite}.
+	 * Exit a parse tree produced by the {@code suite_in_line}
+	 * labeled alternative in {@link PythonParser#suite}.
 	 * @param ctx the parse tree
 	 */
-	void exitSuite(PythonParser.SuiteContext ctx);
+	void exitSuite_in_line(PythonParser.Suite_in_lineContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code suite_new_line}
+	 * labeled alternative in {@link PythonParser#suite}.
+	 * @param ctx the parse tree
+	 */
+	void enterSuite_new_line(PythonParser.Suite_new_lineContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code suite_new_line}
+	 * labeled alternative in {@link PythonParser#suite}.
+	 * @param ctx the parse tree
+	 */
+	void exitSuite_new_line(PythonParser.Suite_new_lineContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link PythonParser#decorator}.
 	 * @param ctx the parse tree

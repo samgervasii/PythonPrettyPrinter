@@ -53,8 +53,8 @@ eval_input
     ;
 
 stmt
-    : simple_stmt   #s_stmt
-    | compound_stmt #c_stmt
+    : simple_stmt   
+    | compound_stmt 
     ;
 
 compound_stmt
@@ -67,8 +67,8 @@ compound_stmt
     ;
 
 suite
-    : simple_stmt
-    | LINE_BREAK INDENT stmt+ DEDENT
+    : simple_stmt                                         #suite_in_line
+    | LINE_BREAK INDENT stmt+ DEDENT                      #suite_new_line
     ;
 
 decorator
