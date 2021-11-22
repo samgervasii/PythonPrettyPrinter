@@ -1,3 +1,3 @@
 # PythonPrettyPrinter
 
-Source of the python grammar used and modified : https://github.com/antlr/grammars-v4
+g4 files used and modified came from : https://github.com/antlr/grammars-v4
