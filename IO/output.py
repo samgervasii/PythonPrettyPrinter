@@ -6,4 +6,4 @@ if ( x == 3 ) :
 else : 
     print ( "not ciao" ) 
 if x == 3 : 
-    print ( "b" ) 
+    print ( "b" )
