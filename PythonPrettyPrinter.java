@@ -107,7 +107,7 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
   @Override
   public String visitErrorNode(ErrorNode node){
     System.out.println(node.getText()+" : error node text");
-    System.exit(0);
+    System.exit(1);
     return node.getText();
   }
 
