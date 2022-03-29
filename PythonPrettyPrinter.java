@@ -1,7 +1,6 @@
 import java.io.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
-import java.util.*;
 
 public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Extends GrammarNameBaseVisitor
   protected final int _IND = 4; // costant that tells us how many spaces
