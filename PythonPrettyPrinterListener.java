@@ -2,13 +2,18 @@ import java.io.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class PythonPrettyPrinterListener extends PythonParserBaseListener { // Extends GrammarNameBaseListener
-
-    private String _target = ""; // code will be here
-    private static final int _IND = 4; // constant of indents increment
-    private int _indents = 0; // number of indents applied, multiple of IND
-    private boolean _stmt_parent = false; // keeping trace of stmt being the parent
-    private boolean _error = false; // starts with no error occured
+//Extends GrammarNameBaseListener
+public class PythonPrettyPrinterListener extends PythonParserBaseListener { 
+    //code will be here
+    private String _target = "";
+    //constant of indents increment 
+    private static final int _IND = 4;
+    //number of indents applied, multiple of IND 
+    private int _indents = 0;
+    //keeping trace of stmt being the parent 
+    private boolean _stmt_parent = false;
+    //starts with no error occured 
+    private boolean _error = false; 
 
     protected void addToTarget(String target) {
         this._target += target;
@@ -46,10 +51,10 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
         this._target = _target.substring(0, _target.length() - 1);
     }
 
+    //add white space based on number on indents, that can only be a multiple of IND (4)
     protected void applyIndents() {
         for (int i = 0; i < getIndents(); i++) {
-            addToTarget(" "); // add white space based on number on indents, that can only be a multiple of
-                              // IND (4)
+            addToTarget(" ");                                
         }
     }
 
@@ -62,34 +67,38 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     @Override
     public void enterStmt(PythonParser.StmtContext ctx) {
         if (getIndents() > 0) {
-            applyIndents(); // the parent is a suite
-            setStmtParent(true); // walk in suite and then stmt
+            //the parent is a suite
+            applyIndents();
+            //walk in suite and then stmt
+            setStmtParent(true); 
         }
     }
 
     @Override
     public void exitStmt(PythonParser.StmtContext ctx) {
-        addToTarget("\n"); // newline on every statement
+        //newline on every statement
+        addToTarget("\n"); 
         setStmtParent(false);
     }
 
     @Override
     public void enterSuite_new_line(PythonParser.Suite_new_lineContext ctx) {
-        addToTarget("\n"); // newline on on every clause that indent
+        //newline on on every clause that indent
+        addToTarget("\n"); 
         addIndents();
     }
 
     @Override
     public void exitSuite_new_line(PythonParser.Suite_new_lineContext ctx) {
         cutIndents();
-        removeLastChar(); // we got new line from statement so we remove the last char for having a better
-                          // formatted code
+        //we got new line from statement so we remove the last char for having a better formatted code
+        removeLastChar();                
     }
 
     @Override
     public void enterSimple_stmt(PythonParser.Simple_stmtContext ctx) {
-        if (!getStmtParent()) { // simple_stmt can have suite as a direct parent, so we have to indent without
-            // walk on stmt
+        //simple_stmt can have suite as a direct parent, so we have to indent without walk on stmt 
+        if (!getStmtParent()) { 
             applyIndents();
         }
     }
@@ -98,7 +107,8 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     public void enterElif_clause(PythonParser.Elif_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            applyIndents(); // to align with other indents if they exist. This is true for every clause
+            //to align with other indents if they exist. This is true for every clause
+            applyIndents(); 
         }
     }
 
@@ -106,7 +116,8 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     public void enterElse_clause(PythonParser.Else_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            applyIndents(); // to align with other indents if they exist. This is true for every clause
+            //to align with other indents if they exist. This is true for every clause
+            applyIndents(); 
         }
     }
 
@@ -114,7 +125,8 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     public void enterExcept_clause(PythonParser.Except_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            applyIndents(); // to align with other indents if they exist. This is true for every clause
+            //to align with other indents if they exist. This is true for every clause
+            applyIndents(); 
         }
     }
 
@@ -122,7 +134,8 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     public void enterFinally_clause(PythonParser.Finally_clauseContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            applyIndents(); // to align with other indents if they exist. This is true for every clause
+            //to align with other indents if they exist. This is true for every clause
+            applyIndents(); 
         }
     }
 
@@ -130,15 +143,19 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     public void exitDecorator(PythonParser.DecoratorContext ctx) {
         addToTarget("\n");
         if (getIndents() > 0) {
-            applyIndents(); // to align with other indents if they exist. This is true for every clause
+            //to align with other indents if they exist. This is true for every clause
+            applyIndents(); 
         }
     }
 
     @Override
     public void visitTerminal(TerminalNode node) {
-        if (node.getText() != "<EOF>") { // do not print <EOF>
-            addToTarget(node.getText() + " "); // every terminal node is whitespaced
-            if (node.getText() == "") { // redundant
+        //do not print <EOF>
+        if (node.getText() != "<EOF>") {
+            //every terminal node is whitespaced
+            addToTarget(node.getText() + " ");
+            //redundant
+            if (node.getText() == "") { 
                 removeLastChar();
             }
         }
@@ -152,27 +169,36 @@ public class PythonPrettyPrinterListener extends PythonParserBaseListener { // E
     // Main
     public static void main(String[] args) throws IOException {
         // objects declaration
-        String input_path = args[0]; // from commands line, otherwise "IO\\input.py";
+        String input_path = args[0];
         String output_path = args[1];
         String code = "";
-        FileWriter myWriter = new FileWriter(output_path); // write on the output_path
-        PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
-        CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
-        PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
-        ParseTree tree = parser.root(); // parser.StarterRule() for ParseTree
-        ParseTreeWalker walker = new ParseTreeWalker(); // walker
-        PythonPrettyPrinterListener listener = new PythonPrettyPrinterListener(); // main listener
+        //write on the output_path
+        FileWriter myWriter = new FileWriter(output_path);
+        //GrammarNameLexer lexer = new ..
+        PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); 
+        //Tokens stream from lexer
+        CommonTokenStream tokens = new CommonTokenStream(lexer);
+        //GrammarNameParser parser = new GrammarNameParser from tokens
+        PythonParser parser = new PythonParser(tokens);
+        //parser.StarterRule() for ParseTree
+        ParseTree tree = parser.root(); 
+        ParseTreeWalker walker = new ParseTreeWalker();
+        PythonPrettyPrinterListener listener = new PythonPrettyPrinterListener();
 
         // actions
-        walker.walk(listener, tree); // walker walks the ParseTree using the final listener
-        code = listener.getTarget(); // we recover the string target completed
+        //walker walks the ParseTree using the final listener
+        walker.walk(listener, tree);
+        //we recover the string target completed 
+        code = listener.getTarget(); 
         if (listener.getError()) {
             System.out.println("Parsing error occured, please check your input code");
         } else {
-            myWriter.write(code);// we write on file
+            //we write on file
+            myWriter.write(code);
             System.out.println("code wrote successfully");
         }
-        myWriter.close(); // close the file
+        //close the file
+        myWriter.close(); 
 
     }
 }
