@@ -6,7 +6,7 @@ import org.antlr.v4.runtime.tree.*;
 public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { 
   //costant that tells us how many spaces
   protected final int _IND = 4;
-  //number of indents applied, multiple of IND
+  //number of spaces to apply, multiple of IND
   protected int _indents = 0; 
 
   // return a string of n spaces where n is _indents
