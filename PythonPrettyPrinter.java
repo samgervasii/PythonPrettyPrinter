@@ -2,11 +2,15 @@ import java.io.*;
 import org.antlr.v4.runtime.*;
 import org.antlr.v4.runtime.tree.*;
 
-public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Extends GrammarNameBaseVisitor
-  protected final int _IND = 4; // costant that tells us how many spaces
-  protected int _indents = 0; // number of indents applied, multiple of IND
+//Extends GrammarNameBaseVisitor
+public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { 
+  //costant that tells us how many spaces
+  protected final int _IND = 4;
+  //number of indents applied, multiple of IND
+  protected int _indents = 0; 
 
-  protected String applyIndents() { // return a string of n spaces where n is _indents
+  // return a string of n spaces where n is _indents
+  protected String applyIndents() { 
     String tabs = "";
     for (int i = 0; i < _indents; i++) {
       tabs += " ";
@@ -16,29 +20,31 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
 
   // override visitor methods
 
+  //if indents are setted, apply. In every cases add a new line
   @Override
-  public String visitStmt(PythonParser.StmtContext ctx) { // if indents are setted, apply. In every cases add a new line
+  public String visitStmt(PythonParser.StmtContext ctx) { 
     if (_indents > 0) {
       return applyIndents() + visitChildren(ctx) + "\n";
     }
     return visitChildren(ctx) + "\n";
   }
 
+  //suite in new line has to introduce an increment of indents
   @Override
-  public String visitSuite_new_line(PythonParser.Suite_new_lineContext ctx) { // suite in new line has to introduce an
-                                                                              // increment of indents
+  public String visitSuite_new_line(PythonParser.Suite_new_lineContext ctx) { 
     _indents += _IND;
     String suite = "\n" + visitChildren(ctx);
-    suite = suite.substring(0, suite.length() - 1); // delete redundant NEW LINE
+    //delete redundant NEW LINE
+    suite = suite.substring(0, suite.length() - 1); 
     _indents -= _IND;
     return suite;
   }
 
+  //same as Stmt but the new line is added before
+  //the visitChildren (can be indented but not by
+  //the last indenter), that's valid for all the clauses
   @Override
-  public String visitElif_clause(PythonParser.Elif_clauseContext ctx) { // same as Stmt but the new line is added before
-                                                                        // the visitChildren (can be indented but not by
-                                                                        // the last indenter), that's valid for all the
-                                                                        // clauses
+  public String visitElif_clause(PythonParser.Elif_clauseContext ctx) { 
     if (_indents > 0) {
       return "\n" + applyIndents() + visitChildren(ctx);
     }
@@ -69,18 +75,20 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
     return "\n" + visitChildren(ctx);
   }
 
+  //just like Stmt
   @Override
-  public String visitDecorator(PythonParser.DecoratorContext ctx) { // just like Stmt
+  public String visitDecorator(PythonParser.DecoratorContext ctx) { 
     if (_indents > 0) {
       return applyIndents() + visitChildren(ctx) + "\n";
     }
     return visitChildren(ctx) + "\n";
   }
 
+  //the original visitChildren had an aggregate method with result and
+  //childResult, the effect was the return of the last child only.
+  //Modified with a += operator
   @Override
-  public String visitChildren(RuleNode node) { // the original visitChildren had an aggregate method with result and
-                                               // childResult, the effect was the return of the only last child.
-                                               // Modified with a += operator
+  public String visitChildren(RuleNode node) {                                                                                          
     String result = defaultResult();
     if (result == null)
       result = "";
@@ -111,19 +119,26 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
   }
 
   public static void main(String[] args) throws IOException {
-    // objects declaration
-    String input_path = args[0]; // from commands line, otherwise "IO\\input.py";
-    String output_path = args[1]; //from commands line, otherwise "OP\\output.py"
+    //objects declaration
+    String input_path = args[0]; 
+    String output_path = args[1]; 
 
-    FileWriter targetWriter = new FileWriter(output_path); //file writer
-    PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); // GrammarNameLexer lexer = new ..
-    CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
-    PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
-    ParseTree tree = parser.root(); // parser.StarterRule() for ParseTree
-    PythonPrettyPrinter visitor = new PythonPrettyPrinter(); // main visitor
+    //file writer
+    FileWriter targetWriter = new FileWriter(output_path);
+    //GrammarNameLexer lexer = new ..
+    PythonLexer lexer = new PythonLexer(CharStreams.fromFileName(input_path)); 
+    //Tokens stream from lexer
+    CommonTokenStream tokens = new CommonTokenStream(lexer); 
+    //GrammarNameParser parser = new GrammarNameParser from tokens
+    PythonParser parser = new PythonParser(tokens); 
+    //parser.StarterRule() for ParseTree
+    ParseTree tree = parser.root();
+    //main visitor 
+    PythonPrettyPrinter visitor = new PythonPrettyPrinter(); 
 
-    // actions
-    String c = visitor.visit(tree); // we recover the string target completed
+    //actions
+    //we recover the string target completed
+    String c = visitor.visit(tree); 
     targetWriter.write(c);
     System.out.println("code written on file succesfully");
     targetWriter.close();
