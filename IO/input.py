@@ -8,3 +8,6 @@ else:
 
 if x==3 :
   print("b")
+
+
+c = x+y; z = c+x

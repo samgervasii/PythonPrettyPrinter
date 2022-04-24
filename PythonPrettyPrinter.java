@@ -120,7 +120,7 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> { // Ex
     CommonTokenStream tokens = new CommonTokenStream(lexer); // Tokens stream from lexer
     PythonParser parser = new PythonParser(tokens); // GrammarNameParser parser = new GrammarNameParser from tokens
     ParseTree tree = parser.root(); // parser.StarterRule() for ParseTree
-    PythonPrettyPrinter visitor = new PythonPrettyPrinter(); // main listener
+    PythonPrettyPrinter visitor = new PythonPrettyPrinter(); // main visitor
 
     // actions
     String c = visitor.visit(tree); // we recover the string target completed
