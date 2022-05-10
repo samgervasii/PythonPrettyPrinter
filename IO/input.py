@@ -1,13 +1,8 @@
-x = 3
+x = 3 
 y = 9
-z = -32
-if(x == 3):
-  print("ciao")
+if x==3:
+    y+=1
 else:
-  print("not ciao")
+    y-=1
 
-if x==3 :
-  print("b")
-
-
-c = x+y; z = c+x
+print(x,y)
