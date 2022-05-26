@@ -84,9 +84,9 @@ public class PythonPrettyPrinter extends PythonParserBaseVisitor<String> {
     return visitChildren(ctx) + "\n";
   }
 
-  //the original visitChildren had an aggregate method with result and
-  //childResult, the effect was the return of the last child only.
-  //Modified with a += operator
+  //the original visitChildren had result=aggregateResult(result, childResult) 
+  //the effect was the return of the last child only.
+  //Modified with a += operator and introduced null check
   @Override
   public String visitChildren(RuleNode node) {                                                                                          
     String result = defaultResult();
